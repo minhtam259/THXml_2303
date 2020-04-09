@@ -12,7 +12,7 @@ namespace THXml
         public static SqlConnection DataConnection()
         {
             string connectionString = null;
-            connectionString = @"Data Source=ADMIN\SQLEXPRESS;Initial Catalog=XML2303;User ID=sa;Password=123";
+            connectionString = @"Data Source=TAM\SQLEXPRESS;Initial Catalog=XML2303;User ID=sa;Password=123";
             SqlConnection cnn = new SqlConnection(connectionString);
             return cnn;
         }
