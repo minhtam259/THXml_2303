@@ -11,7 +11,6 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using THXml;
-using System.Xml.Linq;
 
 namespace THXml
 {
@@ -22,24 +21,57 @@ namespace THXml
             InitializeComponent();
         }
 
-        
+        public string path = @"E:\WFC#\THXml\THXml\bin\Debug\XmlSinhVien_ADD_EDIT_DEL.xml";
         private void loaddata_Click(object sender, EventArgs e)
         {
-            LoadSinhVienToControl();
+            loadfile();
         }
 
+        private void loadfile()
+        {
+            dataGridView1.Rows.Clear();
+            XmlDocument xdoc = new XmlDocument();
+            xdoc.Load(path);
+            XPathNavigator nav = xdoc.CreateNavigator();
+            XPathNodeIterator nodeiter = nav.Select(@"BIZREQUEST/DATAAREA/VOUCHERS/HEADER");
+            int row = 0;
+            while (nodeiter.MoveNext())
+            {
+                dataGridView1.Rows.Add();
+                dataGridView1.Rows[row].Cells[0].Value = nodeiter.Current.SelectSingleNode("@SinhvienPrkID").Value.ToString();
+                dataGridView1.Rows[row].Cells[1].Value = nodeiter.Current.SelectSingleNode("@SinhvienID").Value.ToString();
+                dataGridView1.Rows[row].Cells[2].Value = nodeiter.Current.SelectSingleNode("@SinVienName").Value.ToString();
+                dataGridView1.Rows[row].Cells[3].Value = nodeiter.Current.SelectSingleNode("@SinvienEmail").Value.ToString();
+                dataGridView1.Rows[row].Cells[4].Value = nodeiter.Current.SelectSingleNode("@SinvienPhone").Value.ToString();
+                dataGridView1.Rows[row].Cells[5].Value = nodeiter.Current.SelectSingleNode("@SinhvienAddr").Value.ToString();
+                row++;
+            }
+            dataGridView1.Refresh();
+        }
         private void themdata_Click(object sender, EventArgs e)
         {
-
-            SinhVienDBMng.themsv(GetXDoc());
-            LoadSinhVienToControl();
+            sinhvien sv = new sinhvien();
+            sv.PrkId = prktxt.Text;
+            sv.Id = idtxt.Text;
+            sv.Name = nametxt.Text;
+            sv.Email = emailtxt.Text;
+            sv.Phone = phonetxt.Text;
+            sv.Addr = addtxt.Text;
+            SinhVienDBMng.themsv(sv);
+            loadfile();
         }
 
         private void suadata_Click(object sender, EventArgs e)
         {
-
-            SinhVienDBMng.suasv(GetXDoc());
-            LoadSinhVienToControl();
+            sinhvien sv = new sinhvien();
+            sv.PrkId = prktxt.Text;
+            sv.Id = idtxt.Text;
+            sv.Name = nametxt.Text;
+            sv.Email = emailtxt.Text;
+            sv.Phone = phonetxt.Text;
+            sv.Addr = addtxt.Text;
+            SinhVienDBMng.suasv(sv);
+            loadfile();
         }
 
         private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
@@ -47,52 +79,48 @@ namespace THXml
             prktxt.Text = dataGridView1.SelectedRows[0].Cells["prkid"].Value.ToString();
             idtxt.Text = dataGridView1.SelectedRows[0].Cells["id"].Value.ToString();
             nametxt.Text = dataGridView1.SelectedRows[0].Cells["name"].Value.ToString();
+            emailtxt.Text = dataGridView1.SelectedRows[0].Cells["email"].Value.ToString();
+            phonetxt.Text = dataGridView1.SelectedRows[0].Cells["phone"].Value.ToString();
             addtxt.Text = dataGridView1.SelectedRows[0].Cells["add"].Value.ToString();
         }
 
         private void xoadata_Click(object sender, EventArgs e)
         {
-    
-            SinhVienDBMng.xoasv(GetXDoc());
-            LoadSinhVienToControl();
-
+            sinhvien sv = new sinhvien();
+            sv.PrkId = prktxt.Text;
+            SinhVienDBMng.xoasv(sv);
+            loadfile();
         }
 
-        private XmlDocument GetXDoc()
+        private void updatedata_Click(object sender, EventArgs e)
         {
-            XDocument xDoc = new XDocument(new XElement("BIZREQUEST",
-                                    new XElement("DATAAREA",
-                                        new XElement("VOUCHERS"))));
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(xDoc.CreateReader());
-            XPathNavigator nav = xmlDoc.CreateNavigator();
-            XElement header = new XElement("HEADER",
-                 new XAttribute("SinhvienPrkID", prktxt.Text),
-                 new XAttribute("SinhvienID", idtxt.Text),
-                 new XAttribute("SinhvienName", nametxt.Text),
-                 new XAttribute("SinhvienAddr", addtxt.Text),
-                 new XAttribute("SinhvienEmail", emailtxt.Text),
-                 new XAttribute("SinhvienPhone", phonetxt.Text));
-            nav.SelectSingleNode("//VOUCHERS").AppendChild(header.CreateReader());
-
-            return xmlDoc;
-        }
-        private void LoadSinhVienToControl()
-        {
-            dataGridView1.Rows.Clear();
-            XmlDocument XmlSinhVien_View = SinhVienDBMng.GetDanhsachSinvien();
-            XPathNavigator nav = XmlSinhVien_View.CreateNavigator();
-            XPathNodeIterator nodes = nav.Select("//LINE");
-            int r = 0;
-            foreach (XPathNavigator v in nodes)
+            using (SqlConnection cnn = connectDB.DataConnection())
             {
-                dataGridView1.Rows.Add();
-                dataGridView1.Rows[r].Cells["id"].Value = v.SelectSingleNode("@SinhvienID").Value.ToString();
-                dataGridView1.Rows[r].Cells["prkid"].Value = v.SelectSingleNode("@SinhvienPrkID").Value.ToString();
-                dataGridView1.Rows[r].Cells["name"].Value = v.SelectSingleNode("@SinVienName").Value.ToString();
-                dataGridView1.Rows[r].Cells["add"].Value = v.SelectSingleNode("@SinhvienAddr").Value.ToString();
-                ++r;
+                int rows = dataGridView1.Rows.Count;
+                for (int i = 0; i < rows; ++i)
+                {
+                    SqlCommand dCmd = new SqlCommand("Delete Table_1", cnn);
+                    string oString = @"Insert into Table_1 Values(@SinhvienPrkID,@SinhvienID,@SinVienName,@SinvienEmail,@SinvienPhone,@SinhvienAddr)";
+                    SqlCommand oCmd = new SqlCommand(oString, cnn);
+                    oCmd.Parameters.AddWithValue("@SinhvienPrkID", dataGridView1.Rows[i].Cells["prkid"].Value.ToString());
+                    oCmd.Parameters.AddWithValue("@SinhvienID", dataGridView1.Rows[i].Cells["id"].Value.ToString());
+                    oCmd.Parameters.AddWithValue("@SinVienName", dataGridView1.Rows[i].Cells["name"].Value.ToString());
+                    oCmd.Parameters.AddWithValue("@SinvienEmail", dataGridView1.Rows[i].Cells["email"].Value.ToString());
+                    oCmd.Parameters.AddWithValue("@SinvienPhone", dataGridView1.Rows[i].Cells["phone"].Value.ToString());
+                    oCmd.Parameters.AddWithValue("@SinhvienAddr", dataGridView1.Rows[i].Cells["add"].Value.ToString());
+                    cnn.Open();
+                    if(i == 0) dCmd.ExecuteNonQuery();
+                    oCmd.ExecuteNonQuery();
+                    cnn.Close();
+                }
+                MessageBox.Show("Update Success");
             }
+        }
+
+        private void view_Click(object sender, EventArgs e)
+        {
+            Form2 frm = new Form2();
+            frm.Show();
         }
     }
 }

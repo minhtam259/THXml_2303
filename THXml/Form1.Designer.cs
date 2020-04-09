@@ -31,10 +31,6 @@ namespace THXml
         private void InitializeComponent()
         {
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.prkid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.add = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.idtxt = new System.Windows.Forms.TextBox();
             this.addtxt = new System.Windows.Forms.TextBox();
             this.phonetxt = new System.Windows.Forms.TextBox();
@@ -48,9 +44,17 @@ namespace THXml
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.loaddata = new System.Windows.Forms.Button();
+            this.updatedb = new System.Windows.Forms.Button();
             this.xoadata = new System.Windows.Forms.Button();
             this.suadata = new System.Windows.Forms.Button();
             this.themdata = new System.Windows.Forms.Button();
+            this.view = new System.Windows.Forms.Button();
+            this.prkid = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.email = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.phone = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.add = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,6 +67,8 @@ namespace THXml
             this.prkid,
             this.id,
             this.name,
+            this.email,
+            this.phone,
             this.add});
             this.dataGridView1.Cursor = System.Windows.Forms.Cursors.Default;
             this.dataGridView1.Location = new System.Drawing.Point(210, 207);
@@ -70,37 +76,9 @@ namespace THXml
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1016, 331);
+            this.dataGridView1.Size = new System.Drawing.Size(1025, 340);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseClick);
-            // 
-            // prkid
-            // 
-            this.prkid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.prkid.HeaderText = "PrkID";
-            this.prkid.MinimumWidth = 6;
-            this.prkid.Name = "prkid";
-            // 
-            // id
-            // 
-            this.id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.id.HeaderText = "ID";
-            this.id.MinimumWidth = 6;
-            this.id.Name = "id";
-            // 
-            // name
-            // 
-            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.name.HeaderText = "Name";
-            this.name.MinimumWidth = 6;
-            this.name.Name = "name";
-            // 
-            // add
-            // 
-            this.add.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.add.HeaderText = "Address";
-            this.add.MinimumWidth = 6;
-            this.add.Name = "add";
             // 
             // idtxt
             // 
@@ -213,13 +191,24 @@ namespace THXml
             // loaddata
             // 
             this.loaddata.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.loaddata.Location = new System.Drawing.Point(103, 85);
+            this.loaddata.Location = new System.Drawing.Point(210, 37);
             this.loaddata.Name = "loaddata";
             this.loaddata.Size = new System.Drawing.Size(126, 59);
             this.loaddata.TabIndex = 13;
             this.loaddata.Text = "Load File";
             this.loaddata.UseVisualStyleBackColor = true;
             this.loaddata.Click += new System.EventHandler(this.loaddata_Click);
+            // 
+            // updatedb
+            // 
+            this.updatedb.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.updatedb.Location = new System.Drawing.Point(210, 119);
+            this.updatedb.Name = "updatedb";
+            this.updatedb.Size = new System.Drawing.Size(126, 63);
+            this.updatedb.TabIndex = 14;
+            this.updatedb.Text = "Update Database";
+            this.updatedb.UseVisualStyleBackColor = true;
+            this.updatedb.Click += new System.EventHandler(this.updatedata_Click);
             // 
             // xoadata
             // 
@@ -254,14 +243,68 @@ namespace THXml
             this.themdata.UseVisualStyleBackColor = true;
             this.themdata.Click += new System.EventHandler(this.themdata_Click);
             // 
+            // view
+            // 
+            this.view.Location = new System.Drawing.Point(30, 78);
+            this.view.Name = "view";
+            this.view.Size = new System.Drawing.Size(131, 62);
+            this.view.TabIndex = 18;
+            this.view.Text = "View";
+            this.view.UseVisualStyleBackColor = true;
+            this.view.Click += new System.EventHandler(this.view_Click);
+            // 
+            // prkid
+            // 
+            this.prkid.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.prkid.HeaderText = "PrkID";
+            this.prkid.MinimumWidth = 6;
+            this.prkid.Name = "prkid";
+            // 
+            // id
+            // 
+            this.id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.id.HeaderText = "ID";
+            this.id.MinimumWidth = 6;
+            this.id.Name = "id";
+            // 
+            // name
+            // 
+            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.name.HeaderText = "Name";
+            this.name.MinimumWidth = 6;
+            this.name.Name = "name";
+            // 
+            // email
+            // 
+            this.email.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.email.HeaderText = "Email";
+            this.email.MinimumWidth = 6;
+            this.email.Name = "email";
+            // 
+            // phone
+            // 
+            this.phone.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.phone.HeaderText = "Phone";
+            this.phone.MinimumWidth = 6;
+            this.phone.Name = "phone";
+            // 
+            // add
+            // 
+            this.add.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.add.HeaderText = "Address";
+            this.add.MinimumWidth = 6;
+            this.add.Name = "add";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1238, 550);
+            this.Controls.Add(this.view);
             this.Controls.Add(this.themdata);
             this.Controls.Add(this.suadata);
             this.Controls.Add(this.xoadata);
+            this.Controls.Add(this.updatedb);
             this.Controls.Add(this.loaddata);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -300,12 +343,16 @@ namespace THXml
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button loaddata;
+        private System.Windows.Forms.Button updatedb;
         private System.Windows.Forms.Button xoadata;
         private System.Windows.Forms.Button suadata;
         private System.Windows.Forms.Button themdata;
+        private Button view;
         private DataGridViewTextBoxColumn prkid;
         private DataGridViewTextBoxColumn id;
         private DataGridViewTextBoxColumn name;
+        private DataGridViewTextBoxColumn email;
+        private DataGridViewTextBoxColumn phone;
         private DataGridViewTextBoxColumn add;
 
         public Button Loaddata { get => this.loaddata; set => this.loaddata = value; }
